@@ -25,6 +25,11 @@ namespace TP07.Models
         {
         }
 
+        static ApplicationDbContext()
+        {
+            Database.SetInitializer(new CreateDatabaseIfNotExists<ApplicationDbContext>());
+        }
+
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
@@ -33,5 +38,7 @@ namespace TP07.Models
         public System.Data.Entity.DbSet<TP07.Models.ArticulosModels> ArticulosModels { get; set; }
 
         public System.Data.Entity.DbSet<TP07.Models.FacturasModels> FacturasModels { get; set; }
+
+        public System.Data.Entity.DbSet<TP07.Models.FacturaDetallesModels> FacturaDetallesModels { get; set; }
     }
 }

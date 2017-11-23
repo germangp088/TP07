@@ -38,7 +38,12 @@ namespace TP07.Controllers
         // GET: Facturas/Create
         public ActionResult Create()
         {
-            return View();
+            FacturaViewModel facturaViewModel = new FacturaViewModel();
+            facturaViewModel.factura = new FacturasModels();
+            facturaViewModel.factura.fecha = DateTime.Now;
+            facturaViewModel.detalle = new FacturaDetallesModels();
+            facturaViewModel.articulos = db.ArticulosModels.ToList().Select(i=> new SelectListItem() { Value = i.id.ToString(), Text = i.descripcion }).ToList();
+            return View(facturaViewModel);
         }
 
         // POST: Facturas/Create
@@ -46,16 +51,16 @@ namespace TP07.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id,fecha,total")] FacturasModels facturasModels)
+        public ActionResult Create(FacturaViewModel facturaViewModel)
         {
             if (ModelState.IsValid)
             {
-                db.FacturasModels.Add(facturasModels);
+                db.FacturasModels.Add(facturaViewModel.factura);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                //return RedirectToAction("Create");
             }
-
-            return View(facturasModels);
+            facturaViewModel.articulos = db.ArticulosModels.ToList().Select(i => new SelectListItem() { Value = i.id.ToString(), Text = i.descripcion }).ToList();
+            return View(facturaViewModel);
         }
 
         // GET: Facturas/Edit/5
@@ -78,7 +83,7 @@ namespace TP07.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id,fecha,total")] FacturasModels facturasModels)
+        public ActionResult Edit([Bind(Include = "id,numeroFactura,fecha")] FacturasModels facturasModels)
         {
             if (ModelState.IsValid)
             {
