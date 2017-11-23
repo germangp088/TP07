@@ -49,18 +49,20 @@ namespace TP07.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id,facturaid,articuloid,cantidad,precio")] FacturaDetallesModels facturaDetallesModels)
+        public void Create(FacturaViewModel facturaViewModel)
         {
             if (ModelState.IsValid)
             {
-                db.FacturaDetallesModels.Add(facturaDetallesModels);
+                facturaViewModel.detalle.facturaid = facturaViewModel.factura.id;
+                db.FacturaDetallesModels.Add(facturaViewModel.detalle);
                 db.SaveChanges();
-                return RedirectToAction("Index");
             }
+            facturaViewModel.articulos = db.ArticulosModels.ToList().Select(i => new SelectListItem() { Value = i.id.ToString(), Text = i.descripcion }).ToList();
 
-            ViewBag.articuloid = new SelectList(db.ArticulosModels, "id", "codigo", facturaDetallesModels.articuloid);
-            ViewBag.facturaid = new SelectList(db.FacturasModels, "id", "id", facturaDetallesModels.facturaid);
-            return View(facturaDetallesModels);
+            TempData.Add("recargar", "no");
+            TempData.Add("facturaViewModel", facturaViewModel);
+
+            RedirectToAction("Create", "Facturas");
         }
 
         // GET: FacturaDetallesModels/Edit/5

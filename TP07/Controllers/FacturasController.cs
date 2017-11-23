@@ -38,11 +38,16 @@ namespace TP07.Controllers
         // GET: Facturas/Create
         public ActionResult Create()
         {
+            if (TempData.Count > 0 && TempData["recargar"].ToString() == "no")
+            {
+                TempData["recargar"] = "si";
+                return View(TempData["facturaViewModel"]);
+            }
             FacturaViewModel facturaViewModel = new FacturaViewModel();
             facturaViewModel.factura = new FacturasModels();
             facturaViewModel.factura.fecha = DateTime.Now;
             facturaViewModel.detalle = new FacturaDetallesModels();
-            facturaViewModel.articulos = db.ArticulosModels.ToList().Select(i=> new SelectListItem() { Value = i.id.ToString(), Text = i.descripcion }).ToList();
+            facturaViewModel.articulos = db.ArticulosModels.ToList().Select(i => new SelectListItem() { Value = i.id.ToString(), Text = i.descripcion }).ToList();
             return View(facturaViewModel);
         }
 
