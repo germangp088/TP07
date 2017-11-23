@@ -49,7 +49,7 @@ namespace TP07.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public void Create(FacturaViewModel facturaViewModel)
+        public ActionResult Create(FacturaViewModel facturaViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -62,7 +62,7 @@ namespace TP07.Controllers
             TempData.Add("recargar", "no");
             TempData.Add("facturaViewModel", facturaViewModel);
 
-            RedirectToAction("Create", "Facturas");
+            return RedirectToAction("Create", "Facturas");
         }
 
         // GET: FacturaDetallesModels/Edit/5
