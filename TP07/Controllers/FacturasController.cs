@@ -40,7 +40,7 @@ namespace TP07.Controllers
         {
             if (TempData.Count > 0 && TempData["recargar"].ToString() == "no")
             {
-                TempData["recargar"] = "si";
+                TempData.Remove("recargar");
                 return View(TempData["facturaViewModel"]);
             }
             FacturaViewModel facturaViewModel = new FacturaViewModel();

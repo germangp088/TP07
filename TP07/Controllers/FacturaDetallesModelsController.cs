@@ -53,13 +53,19 @@ namespace TP07.Controllers
         {
             if (ModelState.IsValid)
             {
+                
                 facturaViewModel.detalle.facturaid = facturaViewModel.factura.id;
+
                 db.FacturaDetallesModels.Add(facturaViewModel.detalle);
+                List<FacturasModels> fm = db.FacturasModels.Where(x => x.id == facturaViewModel.factura.id).ToList();
+                facturaViewModel.factura = fm[0];
                 db.SaveChanges();
             }
             facturaViewModel.articulos = db.ArticulosModels.ToList().Select(i => new SelectListItem() { Value = i.id.ToString(), Text = i.descripcion }).ToList();
-
+            List<FacturaDetallesModels> detalles = db.FacturaDetallesModels.Where(x => x.facturaid == facturaViewModel.factura.id).ToList();
+            facturaViewModel.factura.total = detalles.Sum(x => x.precio * x.cantidad);
             TempData.Add("recargar", "no");
+            TempData.Remove("facturaViewModel");
             TempData.Add("facturaViewModel", facturaViewModel);
 
             return RedirectToAction("Create", "Facturas");
